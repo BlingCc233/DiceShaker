@@ -3,9 +3,7 @@
   <RandDice :key="randKey" :dice_num="diceCount" class="dices"/>
 
   <div class="dice-shake">
-    <div style="flex: 0.2;">
 
-    </div>
     <div class="mask" ref="mask" @mousedown="startDrag" @touchstart="startDragTouch"></div>
 
 
@@ -69,6 +67,7 @@ const shakeDice = () => {
   // 添加 shake-four-times 动画类
   mask.value.classList.add('shake-four-times');
   mask.value.style.top = `${startPos.value}px`;
+
   // 设置 interval 每隔 1ms 将 isDragging 设置为 false
   const intervalId = setInterval(() => {
     isDragging = false;
@@ -77,12 +76,16 @@ const shakeDice = () => {
   // 设置 timeout 在 1.5 秒后清除 interval
   setTimeout(() => {
     clearInterval(intervalId);
+    mask.value.style.top = `${startPos.value}px`;
+
   }, 1500);
 
   // 移除 shake-four-times 动画类
   mask.value.addEventListener('animationend', () => {
     mask.value.classList.remove('shake-four-times');
   }, {once: true});
+
+
 };
 
 
@@ -92,22 +95,26 @@ watch(diceCount, () => {
 
 
 onMounted(() => {
-  startPos.value = mask.value.offsetTop;
-  stopPos.value = -window.innerHeight / 2;
+  startPos.value = window.innerHeight / 7;
+  stopPos.value = -window.innerHeight / 4;
+  console.log(startPos.value);
+  console.log(stopPos.value);
   randKey.value = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-
+  mask.value.style.top = `${startPos.value}px`;
 });
 
 const startDrag = (e) => {
   isDragging = true;
   initialY = e.clientY;
-  maskTop = mask.value.offsetTop - 375;
+  maskTop = mask.value.offsetTop;
 };
 
 const startDragTouch = (e) => {
   isDragging = true;
   initialY = e.touches[0].clientY;
-  maskTop = mask.value.offsetTop - ;
+
+  maskTop = mask.value.offsetTop;
+
 };
 
 const drag = (e) => {
@@ -171,7 +178,6 @@ window.addEventListener('touchend', stopDrag);
 }
 
 .buttion-area {
-  flex: 0.2;
   width: 100%;
   height: 20vh;
   display: flex;
@@ -215,7 +221,6 @@ window.addEventListener('touchend', stopDrag);
   max-width: 500px;
   min-height: 375px;
   max-height: 60vh;
-  flex: 0.6;
   background-image: url("../public/assets/cup.png");
   background-size: contain;
   background-repeat: no-repeat;
@@ -291,8 +296,8 @@ window.addEventListener('touchend', stopDrag);
   .mask {
     min-width: 375px;
     max-width: 375px;
-    min-height: 375px;
-    max-height: 375px;
+    min-height: 80vh;
+    max-height: 100vh;
   }
 
 }
